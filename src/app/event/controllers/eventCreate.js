@@ -1,17 +1,17 @@
 export default class EventCreateCtrl {
-    constructor($location, $state, $stateParams, $timeout, EventService) {
+    constructor($location, $state, $stateParams, $timeout, eventService) {
         this.$location = $location;
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.$timeout = $timeout;
-        this.EventService = EventService;
+        this.eventService = eventService;
         this.loading = false;
-        this.event = {};
+        this.event = {teamMin: 1, teamMax: 1};
         this.error = null;
     }
     createEvent() {
         this.loading = true;
-        this.EventService.createEvent(this.event)
+        this.eventService.createEvent(this.event)
             .then((result) => {
                 this.$timeout(() => {
                     this.loading = false;
@@ -23,6 +23,16 @@ export default class EventCreateCtrl {
                     this.loading = false;
                 });
             });
+    }
+    setTeamMin(value) {
+        if (value > 0 && value <= this.event.teamMax) {
+            this.event.teamMin = value;
+        }
+    }
+    setTeamMax(value) {
+        if (value > 0 && value >= this.event.teamMin) {
+            this.event.teamMax = value;
+        }
     }
 }
 
