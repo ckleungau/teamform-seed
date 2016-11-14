@@ -4,6 +4,7 @@
         <tr>
             <th>User ID</th>
             <th>Name</th>
+            <th>Role</th>
             <th>Create At</th>
         </tr>
     </thead>
@@ -14,6 +15,9 @@
             </td>
             <td>
                 <a ui-sref="user.detail({userId: '{{user.$id}}'})">{{user.name}}</a>
+            </td>
+            <td>
+                <a ui-sref="user.detail({userId: '{{user.$id}}'})">{{user.role}}</a>
             </td>
             <td>
                 {{user.createdAt | date:'medium'}}
