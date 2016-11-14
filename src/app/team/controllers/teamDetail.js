@@ -1,42 +1,64 @@
 export default class TeamDetailCtrl {
-    constructor($location, $state, $stateParams, $timeout, teamService) {
+    constructor($location, $state, $stateParams, $timeout, authService, teamService) {
         this.$location = $location;
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.$timeout = $timeout;
+        this.authService = authService;
         this.teamService = teamService;
         this.team = null;
         this.error = null;
         this.getTeam();
     }
-    getTeam() {
-        this.teamService.getTeam(this.$stateParams.teamId).then((team) => {
+    async getTeam() {
+        try {
+            let team = await this.teamService.getTeam(this.$stateParams.teamId);
             this.$timeout(() => {
-                if (team.$value === null) {
-                    return this.$timeout(() => {
-                        this.error = new Error('Team not exist');
-                    });
-                }
                 this.team = team;
             });
-        }).catch((error) => {
+        } catch (error) {
             this.$timeout(() => {
                 this.error = error;
             });
-        });
+        }
     }
-    joinTeam() {
-        this.teamService.joinTeam(this.$stateParams.teamId).then((teamUsers) => {
+    async joinTeam(positionId) {
+        try {
+            let teamUsers = await this.teamService.joinTeam(this.$stateParams.teamId, positionId);
             this.$timeout(() => {
                 console.log('success');
-                this.getTeam();
             });
-        }).catch((error) => {
+        } catch (error) {
             this.$timeout(() => {
                 this.error = error;
             });
-        });
+        }
+    }
+    async confirmTeamPosition(positionId) {
+        try {
+            let teamUsers = await this.teamService.confirmTeamPosition(this.$stateParams.teamId, positionId);
+            this.$timeout(() => {
+                console.log('success');
+            });
+        } catch (error) {
+            this.$timeout(() => {
+                this.error = error;
+            });
+        }
+    }
+    canManage() {
+        let user = this.authService.getUser();
+        return user && user.uid == this.team.createdBy;
+    }
+    filterJoined(user) {
+        return user.id != null && user.pending !== true && user.confirmed !== false;
+    }
+    filterAvailable(user) {
+        return user.id == null;
+    }
+    filterWaitingList(user) {
+        return user.pending === true && (user.confirmed === false || user.accepted === false);
     }
 }
 
-TeamDetailCtrl.$inject = ['$location', '$state', '$stateParams', '$timeout', 'TeamService'];
+TeamDetailCtrl.$inject = ['$location', '$state', '$stateParams', '$timeout', 'AuthService', 'TeamService'];
