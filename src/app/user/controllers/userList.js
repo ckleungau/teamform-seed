@@ -1,5 +1,5 @@
 export default class UserListCtrl {
-    constructor($location, $state, $timeout, userService) {
+    constructor($location, $state, $timeout, NgTableParams, userService) {
         this.$location = $location;
         this.$state = $state;
         this.$timeout = $timeout;
@@ -7,12 +7,25 @@ export default class UserListCtrl {
         this.users = [];
         this.error = null;
         this.getUsers();
+        this.userListTableParams = new NgTableParams({
+            page: 1,
+            count: 2
+        }, {
+            counts: [],
+            dataset: []
+        });
     }
     async getUsers() {
         try {
             let users = await this.userService.getUsers();
             this.$timeout(() => {
                 this.users = users;
+                this.userListTableParams.settings({
+                    dataset: this.users
+                });
+                // users.$watch(() => {
+                //     this.userListTableParams.reload();
+                // });
             });
         } catch (error) {
             this.$timeout(() => {
@@ -22,4 +35,4 @@ export default class UserListCtrl {
     }
 }
 
-UserListCtrl.$inject = ['$location', '$state', '$timeout', 'UserService'];
+UserListCtrl.$inject = ['$location', '$state', '$timeout', 'NgTableParams', 'UserService'];

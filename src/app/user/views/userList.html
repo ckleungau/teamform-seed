@@ -1,28 +1,29 @@
 <ui-alert message="{{userList.error.message}}" />
-<table class="table table-hover">
-    <thead>
+<table ng-table="userList.userListTableParams" show-filter="true" class="table table-hover">
+    <!-- <thead>
         <tr>
             <th>User ID</th>
             <th>Name</th>
             <th>Role</th>
             <th>Create At</th>
         </tr>
-    </thead>
-    <tbody dir-paginate="user in userList.users | itemsPerPage: 2">
-        <tr>
-            <td>
+    </thead> -->
+    <tbody>
+        <tr ng-repeat="user in $data track by user.$id">
+            <td data-title="'User ID'" sortable="'data.$id'">
                 <a ui-sref="user.detail({userId: '{{user.$id}}'})">{{user.$id}}</a>
             </td>
-            <td>
+            <td data-title="'User Name'" filter="{'user.name': 'text'}" sortable="'user.name'">
                 <a ui-sref="user.detail({userId: '{{user.$id}}'})">{{user.name}}</a>
             </td>
-            <td>
-                <a ui-sref="user.detail({userId: '{{user.$id}}'})">{{user.role}}</a>
+            <td data-title="'User Role'" filter="{'user.role': 'text'}" sortable="'user.role'">
+                <a ui-sref="user.detail({userId: '{{user.$id}}'})">{{user.$role}}</a>
             </td>
-            <td>
+            <td data-title="'Created At'" filter="{'user.createdAt': 'text'}" sortable="'user.createdAt'">
                 {{user.createdAt | date:'medium'}}
             </td>
         </tr>
     </tbody>
 </table>
-<dir-pagination-controls />
+<!-- dir-paginate="user in userList.users | itemsPerPage: 2" -->
+<!-- <dir-pagination-controls /> -->
