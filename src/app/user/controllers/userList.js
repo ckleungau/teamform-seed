@@ -6,7 +6,6 @@ export default class UserListCtrl {
         this.userService = userService;
         this.users = [];
         this.error = null;
-        this.getUsers();
         this.userListTableParams = new NgTableParams({
             page: 1,
             count: 2
@@ -14,6 +13,7 @@ export default class UserListCtrl {
             counts: [],
             dataset: []
         });
+        this.getUsers();
     }
     async getUsers() {
         try {
@@ -23,9 +23,9 @@ export default class UserListCtrl {
                 this.userListTableParams.settings({
                     dataset: this.users
                 });
-                // users.$watch(() => {
-                //     this.userListTableParams.reload();
-                // });
+                users.$watch(() => {
+                    this.userListTableParams.reload();
+                });
             });
         } catch (error) {
             this.$timeout(() => {
