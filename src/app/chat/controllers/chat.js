@@ -11,6 +11,8 @@ export default class ChatCtrl {
         this.data = [];
         this.getMessages();
         this.chatroom = {};
+        this.currentChatroom = {};
+        this.isCurrent = false;
         this.chatrooms = [];
         this.getChatrooms();
     }
@@ -31,6 +33,7 @@ export default class ChatCtrl {
     async send() {
         let user = await this.authService.getUser();
         if (user != null && this.message.data) {
+            // this.message.chatroom = this.chatroom.name;
             this.message.createdBy = user.email;
             this.message.createdAt = Date.now();
             try {
@@ -52,6 +55,25 @@ export default class ChatCtrl {
             this.$timeout(() => {
                 this.chatrooms = chatrooms;
             });
+        } catch (error) {
+            this.$timeout(() => {
+                this.error = error;
+            });
+        }
+    }
+
+    // async openChatroom() {
+    //     try {
+    //         this.currentChatroom = 'this.chatroom.name';
+    //     } catch (error) {
+    //         this.$timeout(() => {
+    //             this.error = error;
+    //         });
+    //     }
+    // }
+    async selectChatroom() {
+        try {
+            isCurrent = !isCurrent;
         } catch (error) {
             this.$timeout(() => {
                 this.error = error;
