@@ -1,59 +1,47 @@
 <ui-alert message="{{chat.error.message}}"></ui-alert>
-<div class="panel panel-primary">
-    <div class="panel-heading">
-        <h3 class="panel-title">Chat</h3>
-        <!-- {{chat.test}} -->
-    </div>
-    <div ng-class="[chat.style['panel-message']]" class="panel-body">
-        <div class="row">
-            <div class="col-sm-3">
-                <div class="row">
-                    <div class="pre-scrollable">
-                        Join Chatroom :
-                        <!-- <div ng-repeat="chatroom in chat.chatrooms">
-                            <button type="button" class="btn " ng-class="isCurrent? 'btn-info':'btn-primary'" ng-click="isCurrent = !isCurrent">{{chatroom.name}}</button>
-                        </div> -->
+<h1>Chat</h1>
+<div class="row">
+	<div class="col-xs-12">
+		<div class="main-box clearfix">
+			<div class="main-box-header clearfix">
+				<h2>Chatroom</h2>
+			</div>
 
-                        <ul class="list-unstyled">
-                            <li ng-repeat="chatroom in chat.chatrooms" class="pull-right clearfix">
-                                <button type="button" class="btn " ng-class="isCurrent? 'btn-info':'btn-primary'" ng-click="isCurrent = !isCurrent">{{chatroom.name}}</button>
-                            </li>
-                        </ul>
+			<div class="main-box-body clearfix">
+				<div class="conversation-wrapper">
+					<div class="conversation-content" scroll-glue>
+						<div class="conversation-inner" ng-repeat="message in chat.messages">
+							<div class="conversation-item clearfix" ng-class="{'item-left': message.data.createdBy != chat.me, 'item-right': message.data.createdBy == chat.me}">
+								<div class="conversation-user">
+									<img ng-src="{{message.getCreatedByUser().getImageUrl()}}" class="img-small" alt=""/>
+								</div>
+								<div class="conversation-body">
+									<div class="name">
+                                        <a ui-sref="user.detail({userId: message.data.createdBy})" ng-class="{red: message.getCreatedByUser().getGender() == 'female'}">{{message.getCreatedByUser().data.name}}</a>
+									</div>
+									<div class="time hidden-xs">
+										{{message.data.createdAt | date:'medium'}}
+									</div>
+									<div class="text">
+										{{message.data.content}}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="conversation-new-message" ng-if="chat.me">
+						<form ng-submit="chat.send()">
+							<div class="form-group">
+								<textarea class="form-control" rows="2" placeholder="Enter your message..." ng-model="chat.message.content"></textarea>
+							</div>
 
-                    </div>
-                    <div ng-class="[chat.style['chat-textbox']]">
-                        <!-- <div>
-                            Create chatroom :
-                        </div> -->
-                        <div>
-                            <div>
-                                Create chatroom :
-                                <input type="text" class="form-control" placeholder="type chatroom name" ng-model="chat.chatroom.name">
-                                <div class="clearfix"></div>
-                                <button type="button" class="pull-right btn btn-sm btn-danger" ng-click="chat.chatroom.name=''">Delete</btn>
-                                <button type="button" class="pull-right btn btn-sm btn-success" ng-click="chat.create()">Create</btn>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-9">
-                <!-- current chatroom:{{chat.chatrooms.name}} -->
-                <div class="pre-scrollable">
-                    <div ng-repeat="showMessage in chat.messages">
-                        <!-- {{showMessage.chatroom}} -->
-                        {{showMessage.createdBy}}:
-                        {{showMessage.data}}
-                    </div>
-                </div>
-                <!-- <form ng-submit="chat.send()"> -->
-                <div ng-class="[chat.style['chat_write']]">
-                    <textarea class="form-control" placeholder="type message content here" ng-model="chat.message.data"></textarea>
-                    <!-- <div class="clearfix"></div> -->
-                    <button type="button" class="pull-right btn btn-sm btn-success" ng-click="chat.send()">Send</button>
-                </div>
-                <!-- </form> -->
-            </div>
-        </div>
-    </div>
+							<div class="clearfix">
+								<button type="submit" class="btn btn-success pull-right">Send message</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
